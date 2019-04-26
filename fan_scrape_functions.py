@@ -19,7 +19,7 @@ def get_movie_titles(browser,theaters):
         sel = "li[data-theater-id=" + id + "] a.dark"
         titles = browser.find_elements_by_css_selector(sel)
         titles_text = [t.text for t in titles]
-        sel2 = "li[data-theater-id=" + id + "] a.dark, li[data-theater-id=" + id + "] a.btn.showtime-btn.showtime-btn--available"
+        sel2 = "li[data-theater-id=" + id + "] a.dark, li[data-theater-id=" + id + "] .fd-movie__btn-list-item"
         movies_and_times = browser.find_elements_by_css_selector(sel2)
         movie_times = {}
         times = []
@@ -28,9 +28,10 @@ def get_movie_titles(browser,theaters):
                         if len(movies) > 0:
                               movie_times[m.text] = times  
                         times = [] 
-                times.append(m.text)
-        #movies[get_theater_title(browser,id)] = [{'title': m,'times': t} for m,t in zip(movie_times)]       
-    return [t.text for t in movies_and_times]
+                else:
+                        times.append(m.text)
+        movies[get_theater_title(browser,id)] = [{'title': m,'times': t} for m,t in zip(movie_times.keys(),movie_times.values())]       
+    return movies#[(t.text,t.get_attribute('class')) for t in movies_and_times]
 
 def get_next(browser):
     """Go to the next title"""
