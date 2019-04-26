@@ -14,7 +14,7 @@ def get_theater_ids(browser):
 
 def get_movie_titles(browser,theaters):
     """Return the movie title text"""
-    movies = {}
+    movies = []
     for id in theaters:
         sel = "li[data-theater-id=" + id + "] a.dark"
         titles = browser.find_elements_by_css_selector(sel)
@@ -25,12 +25,14 @@ def get_movie_titles(browser,theaters):
         times = []
         for m in movies_and_times:
                 if m.text in titles_text:
-                        if len(movies) > 0:
+                        if len(times) > 0:
                               movie_times[m.text] = times  
                         times = [] 
                 else:
                         times.append(m.text)
-        movies[get_theater_title(browser,id)] = [{'title': m,'times': t} for m,t in zip(movie_times.keys(),movie_times.values())]       
+        theater = get_theater_title(browser,id)
+        for m,t in zip(movie_times.keys(),movie_times.values()): 
+                movies.append({'title': m,'times': t,'theater' : theater})      
     return movies#[(t.text,t.get_attribute('class')) for t in movies_and_times]
 
 def get_next(browser):
